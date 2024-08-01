@@ -30,9 +30,11 @@ IN -- allows you to perform operations similar to using WHERE and =, but for mor
 NOT -- used with IN and LIKE to select all of the rows NOT LIKE or NOT IN a certain condition
     (ex. WHERE sales_rep_d NOT IN (321500, 321570) *dont forget commas*
 AND & BETWEEN -- allow you to combine operations where all combined conditions must be true
+    -- can be used with arithmetic operators (*, +, -, /) & LIKE, IN, NOT
     -- must specify column you're referring to
     -- ex. must be: WHERE occured_at <='2016-04-01' AND occurred_at <= '2016-10-01' 
         NOT WHERE occured_at <= '2016-04-01' AND <= '2016-10-01'
     -- BETWEEN: can also be written as WHERE occured_at BETWEEN '2016-04-01' AND '2016-10-01'
 OR -- allows you to combine operations where at least one of the combined conditions must be true
+    -- used with (+, *, -, /), LIKE, IN, NOT, AND, and BETWEEN
   ex. standard_qty = 0 OR gloss_qty = 0 OR poster_qty = 0
