@@ -20,6 +20,9 @@ WHERE -- displays subsets of data aka filters (goes between FROM & ORDER BY)
 -- Derived Column -- new column that manipulates existing columns (ex. gloss_qty + poster_qty)
   -- AS keyword - alias for the derived column (ex. gloss_qty + poster_qty AS nonstandard_qty)
   -- used with *, +, -, /
+      SELECT id, (standard_amt_usd/total_amt_usd)*100 AS std_percent, total_amt_usd
+      FROM orders
+      LIMIT 10;
 LIKE -- allows you to perform operations similar to WHERE and =, but for when you might not know exactly what you are looking for
     -- can used with % % which notate characters (ex. WHERE referrer_url LIKE '%google%')
 IN -- allows you to perform operations similar to using WHERE and =, but for more than one condition
