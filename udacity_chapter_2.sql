@@ -13,3 +13,13 @@ INNER JOIN
       ON orders.account_id = acounts.id
       -- ON clause to specify a JOIN condition to combine the table in FROM & JOIN statements
       -- specifies the column on which you'd like to merge the 2 tables together
+-- to choose specific columns, put the table name . column name
+- ex. SELECT orders.standard_qty, orders.gloss_qty, 
+          orders.poster_qty,  accounts.website, 
+          accounts.primary_poc
+      FROM orders
+      JOIN accounts
+      ON orders.account_id = accounts.id
+-- PK (primary key): a column where all values are unique (1001, 1002, 1003, etc.)
+-- FK (foreign key): linked to a primary key that exists in another table
+
