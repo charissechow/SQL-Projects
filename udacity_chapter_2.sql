@@ -23,3 +23,16 @@ INNER JOIN
 -- PK (primary key): a column where all values are unique (1001, 1002, 1003, etc.)
 -- FK (foreign key): linked to a primary key that exists in another table
 
+-- Q: Provide a table for all web_events associated with account name of Walmart. There should be three columns. Be sure to include the primary_poc, time of the event, and the channel for each event. Additionally, you might choose to add a fourth column to assure only Walmart events were chosen.
+  - A. SELECT accounts.name, accounts.primary_poc, web_events.channel
+      FROM web_events
+      JOIN accounts
+      ON web_events.account_id = accounts.id 
+  
+-- Q. Provide a table that provides the region for each sales_rep along with their associated accounts. Your final table should include three columns: the region name, the sales rep name, and the account name. Sort the accounts alphabetically (A-Z) according to account name.
+  - A. SELECT region.name, sales_reps.name, accounts.name
+        FROM sales_reps
+        JOIN accounts
+        ON sales_reps.id = accounts.sales_rep_id
+        JOIN region
+        ON sales_reps.region_id = region.id
