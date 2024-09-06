@@ -69,3 +69,14 @@ WHERE r.name = 'Midwest'
 ORDER BY a.name;
 
 2. 
+SELECT r.name region, s.name sales_rep, a.name account
+FROM accounts a
+JOIN sales_reps s 
+ON a.sales_rep_id = s.id
+JOIN region r
+ON s.region_id = r.id
+WHERE r.name = 'Midwest' AND
+s.name LIKE 'S%'
+ORDER BY a.name;
+
+3.
