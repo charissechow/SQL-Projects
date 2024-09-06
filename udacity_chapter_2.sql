@@ -92,7 +92,7 @@ JOIN sales_reps s
 ON a.sales_rep_id = s.id
 JOIN region r
 ON s.region_id = r.id
-WHERE standard_qty > 100
+WHERE o.standard_qty > 100
 
 5.
 
@@ -109,7 +109,7 @@ WHERE standard_qty > 100 AND poster_qty > 50
 ORDER BY unit_price DESC
 
 7.
-SELECT w.channel, a.id
+SELECT w.channel, a.name
 FROM accounts a
 LEFT JOIN web_events w
 ON w.account_id = a.id
@@ -120,4 +120,5 @@ SELECT a.name, o.occurred_at, o.total, o.total_amt_usd
 FROM accounts a
 LEFT JOIN orders o
 ON o.account_id = a.id
-WHERE occurred_at BETWEEN '2015-01-01' and '2015-12-31';
+WHERE o.occurred_at BETWEEN '2015-01-01' and '2015-12-31'
+ORDER BY o.occurred_at DESC;
