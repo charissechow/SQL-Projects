@@ -58,4 +58,14 @@ INNER JOIN (pulls rows that exist across 2 tables)
 
 LEFT JOIN / RIGHT JOIN -- pulls rows that might only exist in 1 table -> NULL
 
+1.
+SELECT r.name region, s.name sales_rep, a.name account
+FROM accounts a
+JOIN sales_reps s 
+ON a.sales_rep_id = s.id
+JOIN region r
+ON s.region_id = r.id
+WHERE r.name = 'Midwest'
+ORDER BY a.name;
 
+2. 
