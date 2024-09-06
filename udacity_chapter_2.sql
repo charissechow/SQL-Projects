@@ -116,4 +116,8 @@ ON w.account_id = a.id
 WHERE a.id = 1001
 
 8.
-
+SELECT a.name, o.occurred_at, o.total, o.total_amt_usd
+FROM accounts a
+LEFT JOIN orders o
+ON o.account_id = a.id
+WHERE occurred_at BETWEEN '2015-01-01' and '2015-12-31';
