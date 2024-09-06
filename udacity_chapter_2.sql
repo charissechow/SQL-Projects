@@ -58,6 +58,8 @@ INNER JOIN (pulls rows that exist across 2 tables)
 
 LEFT JOIN / RIGHT JOIN -- pulls rows that might only exist in 1 table -> NULL
 
+QUIZ: LAST CHECK
+  
 1.
 SELECT r.name region, s.name sales_rep, a.name account
 FROM accounts a
@@ -80,3 +82,38 @@ s.name LIKE 'S%'
 ORDER BY a.name;
 
 3.
+
+4. 
+SELECT r.name region, a.name account, o.total_amt_usd/(total + 0.01) unit_price
+FROM orders o
+JOIN accounts a
+ON o.account_id = a.id
+JOIN sales_reps s 
+ON a.sales_rep_id = s.id
+JOIN region r
+ON s.region_id = r.id
+WHERE standard_qty > 100
+
+5.
+
+6.
+SELECT r.name region, a.name account, o.total_amt_usd/(total + 0.01) unit_price
+FROM orders o
+JOIN accounts a
+ON o.account_id = a.id
+JOIN sales_reps s 
+ON a.sales_rep_id = s.id
+JOIN region r
+ON s.region_id = r.id
+WHERE standard_qty > 100 AND poster_qty > 50
+ORDER BY unit_price DESC
+
+7.
+SELECT w.channel, a.id
+FROM accounts a
+LEFT JOIN web_events w
+ON w.account_id = a.id
+WHERE a.id = 1001
+
+8.
+
