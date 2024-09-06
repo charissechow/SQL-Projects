@@ -4,7 +4,7 @@ JOINS
   -- are the tables storing logical groupings of data?
   -- can I  make changes in a single location, rather than in many ables for the same info?
   -- can I access and manipulate data quickly and efficiently?
-INNER JOIN
+INNER JOIN (pulls rows that exist across 2 tables)
 -- needs a JOIN clause (like a second FROM clause)
 - ex. SELECT orders*,
              accounts.*
@@ -28,6 +28,13 @@ INNER JOIN
       FROM web_events
       JOIN accounts
       ON web_events.account_id = accounts.id 
+
+-- WITH ALIAS:
+  - a. SELECT a.primary_poc, w.occurred_at, w.channel, a.name
+        FROM web_events w
+        JOIN accounts a
+        ON w.account_id = a.id
+        WHERE a.name = 'Walmart';
   
 -- Q. Provide a table that provides the region for each sales_rep along with their associated accounts. Your final table should include three columns: the region name, the sales rep name, and the account name. Sort the accounts alphabetically (A-Z) according to account name.
   - A. SELECT region.name, sales_reps.name, accounts.name
@@ -36,3 +43,19 @@ INNER JOIN
         ON sales_reps.id = accounts.sales_rep_id
         JOIN region
         ON sales_reps.region_id = region.id
+        ORDER BY accounts.name
+
+-- Q. Provide the name for each region for every order, as well as the account name and the unit price they paid (total_amt_usd/total) for the order. Your final table should have 3 columns: region name, account name, and unit price. A few accounts have 0 for total, so I divided by (total + 0.01) to assure not dividing by zero.
+  - A. SELECT r.name region, a.name account, 
+           o.total_amt_usd/(o.total + 0.01) unit_price
+        FROM region r
+        JOIN sales_reps s
+        ON s.region_id = r.id
+        JOIN accounts a
+        ON a.sales_rep_id = s.id
+        JOIN orders o
+        ON o.account_id = a.id;
+
+LEFT JOIN / RIGHT JOIN -- pulls rows that might only exist in 1 table -> NULL
+
+
