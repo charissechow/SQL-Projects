@@ -44,7 +44,7 @@ LIMIT 1
   Dawna Agnew
 
 2. For the region with the largest (sum) of sales total_amt_usd, how many total (count) orders were placed?
-SELECT s.name sales_rep, r.name region_name, o.total total_orders, SUM(total_amt_usd)
+SELECT r.name region_name, o.total total_orders, SUM(total_amt_usd)
 FROM region r
 JOIN sales_reps s
 ON r.id = s.region_id
@@ -52,7 +52,7 @@ JOIN accounts a
 ON s.id = a.sales_rep_id
 JOIN orders o
 ON a.id = o.account_id
-GROUP BY sales_rep, region_name, total_orders
+GROUP BY region_name, total_orders
 ORDER BY MAX(total_amt_usd) DESC
 LIMIT 1
 
