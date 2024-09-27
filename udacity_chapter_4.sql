@@ -29,7 +29,7 @@ WHERE DATE_TRUNC('month', occurred_at) = (SELECT DATE_TRUNC('month', MIN(occurre
 QUIZ (SUBQUERIES)
 
 1. Provide the name of the sales_rep in each region with the largest amount of total_amt_usd sales.
-SELECT s.name sales_rep, r.name region_name, MAX(total_amt_usd)
+SELECT s.name sales_rep, r.name region_name, SUM(total_amt_usd)
 FROM region r
 JOIN sales_reps s
 ON r.id = s.region_id
@@ -38,7 +38,7 @@ ON s.id = a.sales_rep_id
 JOIN orders o
 ON a.id = o.account_id
 GROUP BY sales_rep, region_name
-ORDER BY MAX(total_amt_usd) DESC
+ORDER BY SUM(total_amt_usd) DESC
 LIMIT 1
 
   Dawna Agnew
