@@ -140,3 +140,190 @@ FROM orders))
 
 4,721.1397
 
+COMMON TABLE EXPRESSIONS (CTE)
+-- when creating mulptiple tables using WITH, add comma after ecery table except last table leading to finall query
+-- new table aliased using table_name AS, which is followed by query between parentheses
+Example:
+WITH table1 AS (
+          SELECT *
+          FROM web_events),
+
+     table2 AS (
+          SELECT *
+          FROM accounts)
+
+  *do not need*
+SELECT *
+FROM table1
+JOIN table2
+ON table1.account_id = table2.id;
+
+QUIZ (CTEs)
+
+1. Provide the name of the sales_rep in each region with the largest amount of total_amt_usd sales.
+WITH table1 AS (
+SELECT 
+  s.name sales_rep, 
+  r.name region_name, 
+  SUM(total_amt_usd) AS total_sales
+FROM region r
+JOIN sales_reps s
+  ON s.region_id = r.id
+JOIN accounts a
+  ON s.id = a.sales_rep_id
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1, 2
+),
+
+table2 AS (
+SELECT 
+  region_name,
+  MAX(total_sales) AS max_sales
+FROM table1
+GROUP BY 1
+)
+
+SELECT sales_rep, t1.region_name, max_sales
+FROM table1 t1
+JOIN table2 t2?
+ON t1.region_name = t2.region_name
+AND t1.total_sales = t2.max_sales
+
+2. For the region with the largest sales total_amt_usd, how many total orders were placed?
+SELECT r.name region_name, SUM(o.total_amt_usd) total_sales_by_region, COUNT(o.total) total_orders_by_region
+FROM region r
+JOIN sales_reps s
+  ON s.region_id = r.id
+JOIN accounts a
+  ON s.id = a.sales_rep_id
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1
+ORDER BY 2 DESC
+
+  2357
+
+3. How many accounts had more total purchases than the account name which has bought the most standard_qty paper throughout their lifetime as a customer?
+WITH table1 AS (SELECT a.name account_name, SUM(standard_qty) total_standard_qty, SUM(o.total) total_purchases
+FROM accounts a
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1
+),
+
+table2 AS (SELECT total_purchases
+FROM table1),
+
+table3 AS (SELECT a.name account_name, SUM(standard_qty) total_standard_qty, SUM(o.total) total_purchases
+FROM accounts a
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1),
+
+table4 AS (SELECT *
+FROM table3
+WHERE total_purchases > (SELECT total_purchases
+FROM table1)
+)
+          
+SELECT COUNT(account_name)
+FROM table4
+
+  3
+
+4. For the customer that spent the most (in total over their lifetime as a customer) total_amt_usd, how many web_events did they have for each channel?
+/*WITH table1 AS (SELECT a.name account_name, SUM(total_amt_usd) total_sales, channel, COUNT(w.id) web_events
+FROM web_events w
+JOIN accounts a
+  ON w.account_id = a.id
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1, 3
+ORDER BY total_sales DESC),
+
+table2 AS (SELECT a.name account_name, SUM(total_amt_usd) total_sales, channel, COUNT(w.id)
+FROM web_events w
+JOIN accounts a
+  ON w.account_id = a.id
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1, 3
+ORDER BY total_sales DESC
+LIMIT 1
+)
+
+SELECT *
+FROM table1
+WHERE account_name = (
+SELECT account_name
+FROM table2)*/
+
+WITH table1 AS (
+SELECT 
+  a.name AS account_name, 
+  channel, 
+  COUNT(w.id)
+FROM web_events w
+JOIN accounts a
+  ON w.account_id = a.id
+GROUP BY 1, 2
+),
+
+table2 AS (SELECT 
+   a.name AS account_name, 
+   SUM(total_amt_usd) AS total_sales
+FROM web_events w
+JOIN accounts a
+  ON w.account_id = a.id
+JOIN orders o
+ON o.account_id = a.id
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 1)
+
+SELECT t1.account_name, channel, count
+FROM table1 t1
+JOIN table2 t2
+ ON t1.account_name = t2.account_name
+
+5. What is the lifetime average amount spent in terms of total_amt_usd for the top 10 total spending accounts?
+WITH table1 AS (SELECT 
+   a.name AS account_name,
+   SUM(total_amt_usd) total_sales
+FROM accounts a
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 10)
+  
+SELECT AVG(total_sales)
+FROM table1
+
+6. What is the lifetime average amount spent in terms of total_amt_usd, including only the companies that spent more per order, on average, than the average of all orders.
+WITH table1 AS (SELECT 
+   a.name AS account_name,
+   AVG(total_amt_usd) total_sales
+FROM accounts a
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1),
+  
+table2 AS (SELECT AVG(total_sales) avg_all_sales
+FROM table1),
+
+table3 AS (SELECT 
+   a.name AS account_name,
+   total_amt_usd
+FROM accounts a
+JOIN orders o
+  ON a.id = o.account_id
+GROUP BY 1, 2
+HAVING AVG(total_amt_usd) > (SELECT AVG(total_sales) avg_all_sales
+FROM table1))
+                             
+SELECT AVG (total_amt_usd)
+FROM table3
