@@ -58,4 +58,58 @@ CONCAT
 -- combine columns together across rows
 -- (e.g. CONCAT(firs_name, ' ', last_name)
 
+1. Each company in the accounts table wants to create an email address for each primary_poc. The email address should be the first name of the primary_poc . last name primary_poc @ company name .com.
+WITH table1 AS (SELECT
+LEFT(primary_poc, STRPOS(primary_poc, ' ') -1) AS first_name,
+RIGHT(primary_poc, LENGTH(primary_poc) - STRPOS(primary_poc, ' ')) AS last_name
+FROM accounts)
+      
+SELECT CONCAT(first_name, '.', last_name, '@company.com')
+FROM table1
+
+TO_DATE
+  -- DATE_PART(month,'month')) -> changes month name into# associated with that particular month
+CAST
+  -- turns strings into #s or dates
+  -- CAST (date_column AS DATE)
+
+1. Write query to change date (e.g. 01-31-2014) into correct format and cast as a date
+WITH table1 AS (SELECT 
+date,
+LEFT(date, STRPOS(date, ' ')) AS old_date
+FROM sf_crime_data 
+LIMIT 10),
+     
+table2 AS (SELECT old_date,
+LEFT(old_date, 5) AS day_month,
+RIGHT(old_date, LENGTH(old_date) - 6) AS year_space
+FROM table1),
+
+table3 AS (SELECT 
+LEFT(year_space, 4) AS year
+FROM table2),
+     
+table4 AS (SELECT CONCAT(LEFT(year_space, 4), '/', day_month) AS date_formatted
+FROM table2)
+
+SELECT CAST(date_formatted AS DATE)
+FROM table4
+
+OR (from date as 01/31/2014)
   
+SELECT date orig_date, (SUBSTR(date, 7, 4) || '-' || LEFT(date, 2) || '-' || SUBSTR(date, 4, 2)) new_date
+FROM sf_crime_data;
+
+COALESCE 
+-- returns the first non-null value passed for each row
+-- COALESCE(primary–poc, 'no POC') AS primary_poc_modified
+-- if you COUNT, it will include the new values added in using COALESCE
+
+1. Fill in each of the qty and usd columns with 0 for the table
+SELECT COALESCE(o.id, a.id) filled_id, a.name, a.website, a.lat, a.long, a.primary_poc, a.sales_rep_id, COALESCE(o.account_id, a.id) account_id, o.occurred_at, COALESCE(o.standard_qty, 0) standard_qty, COALESCE(o.gloss_qty,0) gloss_qty, COALESCE(o.poster_qty,0) poster_qty, COALESCE(o.total,0) total, COALESCE(o.standard_amt_usd,0) standard_amt_usd, COALESCE(o.gloss_amt_usd,0) gloss_amt_usd, COALESCE(o.poster_amt_usd,0) poster_amt_usd, COALESCE(o.total_amt_usd,0) total_amt_usd
+FROM accounts a
+LEFT JOIN orders o
+ON a.id = o.account_id
+WHERE o.total IS NULL;
+
+
