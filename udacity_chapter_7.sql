@@ -34,3 +34,19 @@ INEQUALITY JOINS - joining without an equals sign
 -- filtering in the join clause will eliminate rows before they are joined
 -- filtering in the WHERE clause will leave those rows in and produce some nulls
 
+e.g. 
+1. In the following SQL Explorer, write a query that left joins the accounts table and the sales_reps tables on each sale reps ID number and joins it using the < comparison operator on accounts.primary_poc and sales_reps.name, like so: accounts.primary_poc < sales_reps.name
+SELECT a.name AS account_name,
+       primary_poc AS poc_name,
+       s.name AS sales_rep
+FROM accounts a
+LEFT JOIN sales_reps s
+  ON s.id = a.sales_rep_id
+ AND a.primary_poc < s.name
+
+-- meaning: the primary point of contact's full name comes BEFORE the sales representative's name alphabetically
+
+
+      
+ 
+
