@@ -47,6 +47,9 @@ LEFT JOIN sales_reps s
 -- meaning: the primary point of contact's full name comes BEFORE the sales representative's name alphabetically
 
 
+
+
+
       
  
 
